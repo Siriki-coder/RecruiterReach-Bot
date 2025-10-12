@@ -56,15 +56,14 @@ public class BasePage {
 
             // ChromeOptions for headless execution
             ChromeOptions options = new ChromeOptions();
+            options.addArguments("--remote-allow-origins=*");
             options.addArguments("--headless"); // Run without GUI
             options.addArguments("--disable-gpu"); // Recommended for some systems
             options.addArguments("--window-size=1920,1080"); // Set window size
-            options.addArguments("--no-sandbox"); // Useful for running on Linux VM
-            options.addArguments("--disable-dev-shm-usage"); // Useful for running on Docker/VM
 
             driver = new ChromeDriver(options);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-            wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
             logger.info("WebDriver initialized in headless mode.");
         }
