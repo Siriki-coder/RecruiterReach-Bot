@@ -3,7 +3,6 @@ package pages;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileInputStream;
@@ -51,25 +50,15 @@ public class BasePage {
     public void initializeDriver() {
         if (driver == null) {
             logger.info("Initializing WebDriver using WebDriverManager.");
-
             WebDriverManager.chromedriver().setup();
-
-            // ChromeOptions for headless execution
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless"); // Run without GUI
-            options.addArguments("--disable-gpu"); // Recommended for some systems
-            options.addArguments("--window-size=1920,1080"); // Set window size
-            options.addArguments("--no-sandbox"); // Useful for running on Linux VM
-            options.addArguments("--disable-dev-shm-usage"); // Useful for running on Docker/VM
-
-            driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-            wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-
-            logger.info("WebDriver initialized in headless mode.");
+            driver = new ChromeDriver();
+            driver.manage().window().maximize();
+            // Set an implicit wait for better stability
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); 
+            wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // Explicit wait for dynamic elements
+            logger.info("WebDriver initialized.");
         }
     }
-
 
     /**
      * Retrieves a value from the loaded configuration properties.
