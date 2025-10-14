@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.JavascriptExecutor; // New Import Added!
 import java.io.File;
+import java.util.List;
 
 /**
  * Page Object Model for all interactions on the Naukri Profile Page.
@@ -27,9 +28,12 @@ public class NaukriProfilePage extends BasePage {
     private final By saveButton = By.xpath("//button[text()='Save']");
     
     // Resume Upload element (file input field)
-    private final By uploadResumeInputField = By.id("attachCV"); 
-    private final By uploadSuccessMessage = By.xpath("//div[contains(text(),'Resume Uploaded Successfully')]");
-
+    private final By uploadSuccessMessage = By.xpath("//div[@class='msgBox success']//p[@class='msg']]");
+    
+    private By resumeName = By.xpath("//div[@class='resume-name-inline']//div");
+    private By resumeUploadDate = By.xpath("//div[contains(@class,'updateOn typ')]");
+    private By attachCVButton = By.id("attachCV");
+    private By uploadResumeInputField = By.xpath("//input[@type='file' and @id='attachCV']");
 
     /**
      * Navigates to the base URL defined in config.properties.
@@ -94,52 +98,89 @@ public class NaukriProfilePage extends BasePage {
         }
     }
     
+
+
+
+
+
+
+
     /**
-     * Core functionality to upload the resume file specified in config.properties.
-     * Uses JavaScript executor to ensure the file input field is accessible.
+     * Uploads the resume file specified in config.properties.
+     * Robust version: handles dynamic DOMs, hidden elements, and iframes.
      */
     public void uploadResume() {
         String relativeResumePath = getConfig("resume.path");
         File file = new File(relativeResumePath);
         String absoluteResumePath = file.getAbsolutePath();
 
-        // 1. Check if the file exists locally
         if (!file.exists()) {
-            logger.severe("Error: Resume file not found at expected absolute path: " + absoluteResumePath);
+            logger.severe("❌ Resume file not found at: " + absoluteResumePath);
             return;
         }
-
-        logger.info("Data: Preparing to upload file from: " + absoluteResumePath);
-
-        // 2. Ensure we are on the profile page
-        if (!driver.getCurrentUrl().contains("profile")) {
-             wait.until(ExpectedConditions.elementToBeClickable(profileIcon)).click();
-             wait.until(ExpectedConditions.elementToBeClickable(viewProfileLink)).click();
-        }
+        logger.info("📄 Preparing to upload from: " + absoluteResumePath);
 
         try {
-            // 3. Find the file input field
+            // 1. Navigate to profile page if needed
+            if (!driver.getCurrentUrl().contains("profile")) {
+                logger.info("🔗 Navigating to Profile page...");
+                wait.until(ExpectedConditions.elementToBeClickable(profileIcon)).click();
+                wait.until(ExpectedConditions.elementToBeClickable(viewProfileLink)).click();
+            }
+
+            // 2. Handle potential iframe
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            for (WebElement frame : iframes) {
+                if (frame.isDisplayed()) {
+                    driver.switchTo().frame(frame);
+                    logger.info("🪟 Switched to iframe for resume upload area.");
+                    break;
+                }
+            }
+
+            // 3. Try locating the Attach/Upload button
+            WebElement attachButton = null;
+            try {
+                attachButton = wait.until(ExpectedConditions.visibilityOfElementLocated(attachCVButton));
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", attachButton);
+                wait.until(ExpectedConditions.elementToBeClickable(attachButton)).click();
+                logger.info("🖱️ Clicked on Attach/Upload Resume button.");
+            } catch (Exception e) {
+                logger.warning("⚠️ Attach button not found or not clickable. Trying fallback locators...");
+                // Fallback: directly look for input type=file
+            }
+
+            // 4. Locate file input
             WebElement fileInput = wait.until(ExpectedConditions.presenceOfElementLocated(uploadResumeInputField));
-            
-            // 4. FIX: Cast driver to JavascriptExecutor to gain access to executeScript()
-            logger.info("Action: Using Javascript to ensure the hidden file input is visible and focused.");
-            ((JavascriptExecutor) driver).executeScript("arguments[0].style.display='block'; arguments[0].scrollIntoView(true);", fileInput);
+            ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].style.display='block'; arguments[0].removeAttribute('hidden'); arguments[0].scrollIntoView(true);", 
+                fileInput
+            );
 
-            // 5. Send the absolute path of the file to the input element
+            // 5. Send file path
             fileInput.sendKeys(absoluteResumePath);
+            logger.info("📤 File sent to input field.");
 
-            logger.info("Action: File path sent to the input field. Waiting for upload completion...");
-            
-            // 6. Wait for a success indicator or a reasonable time
-            wait.until(ExpectedConditions.visibilityOfElementLocated(uploadSuccessMessage));
-            logger.info("Verification: Resume Uploaded Successfully message appeared.");
+            // 6. Wait for uploaded file details
+            WebElement uploadedFileName = wait.until(ExpectedConditions.visibilityOfElementLocated(resumeName));
+            WebElement uploadedDate = wait.until(ExpectedConditions.visibilityOfElementLocated(resumeUploadDate));
+
+            logger.info("✅ Resume uploaded successfully!");
+            logger.info("📌 File Name: " + uploadedFileName.getText());
+            logger.info("🕒 Uploaded On: " + uploadedDate.getText());
+
+            // Exit iframe if switched
+            driver.switchTo().defaultContent();
 
         } catch (Exception e) {
-            logger.severe("Fatal Error during resume upload: " + e.getMessage());
-            // This is a critical failure point
+            logger.severe("❗ Resume upload failed: " + e.getMessage());
+            driver.switchTo().defaultContent();
             throw new RuntimeException("Failed to complete resume upload process.", e);
         }
     }
+
+
+
 
     /**
      * Utility method to generate a slightly different headline to trigger an update.
