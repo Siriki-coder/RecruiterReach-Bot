@@ -6,7 +6,6 @@
       <class name="com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest">
         <methods>
           <include name="setup"/>
-          <include name="hourlyProfileUpdateTest"/>
           <include name="tearDown"/>
           <include name="hourlyResumeUploadTest"/>
         </methods>
