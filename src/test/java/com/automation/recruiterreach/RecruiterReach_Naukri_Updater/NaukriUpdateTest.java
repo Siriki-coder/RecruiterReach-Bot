@@ -22,12 +22,12 @@ public class NaukriUpdateTest {
         naukriPage.initializeDriver();
     }
 
-//    @Test(priority = 1, description = "Logs in and toggles the profile headline for a soft update.")
-//    public void hourlyProfileUpdateTest() {
-//        naukriPage.navigateToLogin();
-//        naukriPage.login();
-//        naukriPage.updateProfileHeadline();
-//    }
+    @Test(priority = 1, description = "Logs in and toggles the profile headline for a soft update.")
+    public void hourlyProfileUpdateTest() {
+        naukriPage.navigateToLogin();
+        naukriPage.login();
+        naukriPage.updateProfileHeadline();
+    }
     
     @Test(priority = 2, description = "Logs in and uploads a new resume file for a strong update signal.")
     public void hourlyResumeUploadTest() {

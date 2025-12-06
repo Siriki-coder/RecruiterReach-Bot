@@ -2,20 +2,20 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-11-19T22:36:15 IST" name="Default suite" finished-at="2025-11-19T22:38:01 IST" duration-ms="105941">
+  <suite started-at="2025-12-06T19:09:15 IST" name="Default suite" finished-at="2025-12-06T19:11:20 IST" duration-ms="125041">
     <groups>
     </groups>
-    <test started-at="2025-11-19T22:36:15 IST" name="Default test" finished-at="2025-11-19T22:38:01 IST" duration-ms="105941">
+    <test started-at="2025-12-06T19:09:15 IST" name="Default test" finished-at="2025-12-06T19:11:20 IST" duration-ms="125041">
       <class name="com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest">
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest@158d2680]" started-at="2025-11-19T22:36:15 IST" name="setup" finished-at="2025-11-19T22:36:21 IST" duration-ms="6165" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest@158d2680]" started-at="2025-12-06T19:09:15 IST" name="setup" finished-at="2025-12-06T19:09:41 IST" duration-ms="26266" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="hourlyResumeUploadTest()[pri:2, instance:com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest@158d2680]" started-at="2025-11-19T22:36:21 IST" name="hourlyResumeUploadTest" description="Logs in and uploads a new resume file for a strong update signal." finished-at="2025-11-19T22:38:01 IST" duration-ms="99559" status="PASS">
+        <test-method signature="hourlyResumeUploadTest()[pri:2, instance:com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest@158d2680]" started-at="2025-12-06T19:09:41 IST" name="hourlyResumeUploadTest" description="Logs in and uploads a new resume file for a strong update signal." finished-at="2025-12-06T19:11:20 IST" duration-ms="98561" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- hourlyResumeUploadTest -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest@158d2680]" started-at="2025-11-19T22:38:01 IST" name="tearDown" finished-at="2025-11-19T22:38:01 IST" duration-ms="152" status="PASS">
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.automation.recruiterreach.RecruiterReach_Naukri_Updater.NaukriUpdateTest@158d2680]" started-at="2025-12-06T19:11:20 IST" name="tearDown" finished-at="2025-12-06T19:11:20 IST" duration-ms="142" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
